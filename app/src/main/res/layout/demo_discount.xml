@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Demo.SimpleText"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center"
+    android:id="@+id/discount"
+    tools:text="hello"/>

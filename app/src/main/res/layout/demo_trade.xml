@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        style="@style/Demo.SimpleText"
+        android:id="@+id/type"
+        android:layout_gravity="center_horizontal"
+        android:gravity="left"
+        android:layout_marginRight="40dp"
+        tools:text="hello"/>
+
+    <TextView
+        style="@style/Demo.SimpleText"
+        android:id="@+id/total"
+        android:layout_gravity="center_horizontal"
+        android:gravity="right"
+        android:layout_marginLeft="40dp"
+        tools:text="hello"/>
+
+</LinearLayout>
