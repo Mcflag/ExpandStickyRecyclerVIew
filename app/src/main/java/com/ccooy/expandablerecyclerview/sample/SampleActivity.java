@@ -57,10 +57,10 @@ public class SampleActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         rvList.setLayoutManager(linearLayoutManager);
         DefaultItemAnimator animator = new DefaultItemAnimator();
-        animator.setMoveDuration(80);
-        animator.setChangeDuration(80);
-        animator.setAddDuration(80);
-        animator.setRemoveDuration(80);
+        animator.setMoveDuration(70);
+        animator.setChangeDuration(70);
+        animator.setAddDuration(70);
+        animator.setRemoveDuration(70);
         animator.setAnimEndListener(new AnimEndListener() {
             @Override
             public void onAnimationEnd() {
@@ -73,6 +73,9 @@ public class SampleActivity extends AppCompatActivity {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+//                if (RecyclerView.SCROLL_STATE_IDLE == newState) {
+//                    stickyHeaderLayout.updateStickyDelayed();
+//                }
                 if (null != linearLayoutManager) {
                     int position = linearLayoutManager.findFirstVisibleItemPosition();
                     View firstVisiableChildView = linearLayoutManager.findViewByPosition(position);
@@ -82,6 +85,30 @@ public class SampleActivity extends AppCompatActivity {
                         floatingActionButton.setVisibility(View.VISIBLE);
                     } else {
                         floatingActionButton.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (null != linearLayoutManager) {
+                    if (isLoadGroup) {
+//                        int last = linearLayoutManager.findLastVisibleItemPosition();
+//                        int lastGroup = adapter.getGroupPositionForPosition(last);
+//                        if(adapter.getGroupCount()-lastGroup <= 5) {
+//                            loadMoreTime();
+//                            adapter.notifyDataSetChanged();
+//                            refreshLayout.finishLoadMore(true);
+//                        }
+                    } else {
+                        int last = linearLayoutManager.findLastVisibleItemPosition();
+                        int lastGroup = adapter.getGroupPositionForPosition(last);
+                        if(adapter.getChildrenCount(lastGroup)-adapter.getChildPositionForPosition(lastGroup, last)<=5) {
+                            loadMoreData(lastGroup);
+                            adapter.notifyDataSetChanged();
+                            refreshLayout.finishLoadMore(true);
+                        }
                     }
                 }
             }
@@ -102,22 +129,6 @@ public class SampleActivity extends AppCompatActivity {
                 refreshLayout.finishRefresh(true);
             }
         });
-        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                if(isLoadGroup) {
-                    loadMoreTime();
-                    adapter.notifyDataSetChanged();
-                    refreshLayout.finishLoadMore(true);
-                }else{
-                    int last = linearLayoutManager.findLastVisibleItemPosition();
-                    int lastGroup = adapter.getGroupPositionForPosition(last);
-                    loadMoreData(lastGroup);
-                    adapter.notifyDataSetChanged();
-                    refreshLayout.finishLoadMore(true);
-                }
-            }
-        });
 
         groupList = new ArrayList<>();
         displayList = new ArrayList<>();
@@ -127,11 +138,13 @@ public class SampleActivity extends AppCompatActivity {
             public void onHeaderClick(GroupedRecyclerViewAdapter adapter, BaseViewHolder holder,
                                       int groupPosition) {
                 ExpandableAdapter expandableAdapter = (ExpandableAdapter) adapter;
+                int tempPosition = expandableAdapter.getPositionForGroup(groupPosition);
                 if (expandableAdapter.isExpand(groupPosition)) {
                     groupList.get(groupPosition).setNeedToLoad(false);
                     groupList.get(groupPosition).setExpand(false);
                     deleteGroupChild(groupPosition);
                     expandableAdapter.collapseGroup(groupPosition, true);
+                    stickyHeaderLayout.updateStickyDelayed();
                 } else {
                     groupList.get(groupPosition).setExpand(true);
                     groupList.get(groupPosition).setNeedToLoad(true);
@@ -139,6 +152,7 @@ public class SampleActivity extends AppCompatActivity {
                     loadMoreData(groupPosition);
                     adapter.notifyGroupRangeRemoved(groupPosition, count);
                     expandableAdapter.expandGroup(groupPosition, true);
+                    smoothMoveToPosition(rvList, tempPosition);
                 }
             }
         });
@@ -224,5 +238,28 @@ public class SampleActivity extends AppCompatActivity {
 
         displayList.clear();
         displayList.addAll(tempList);
+    }
+
+    private void smoothMoveToPosition(RecyclerView mRecyclerView, final int position) {
+        // 第一个可见位置
+        int firstItem = mRecyclerView.getChildLayoutPosition(mRecyclerView.getChildAt(0));
+        // 最后一个可见位置
+        int lastItem = mRecyclerView.getChildLayoutPosition(mRecyclerView.getChildAt(mRecyclerView.getChildCount() - 1));
+        if (position < firstItem) {
+            // 第一种可能:跳转位置在第一个可见位置之前，使用smoothScrollToPosition
+            mRecyclerView.smoothScrollToPosition(position);
+        } else if (position <= lastItem) {
+            // 第二种可能:跳转位置在第一个可见位置之后，最后一个可见项之前
+            int movePosition = position - firstItem;
+            if (movePosition >= 0 && movePosition < mRecyclerView.getChildCount()) {
+                int top = mRecyclerView.getChildAt(movePosition).getTop();
+                // smoothScrollToPosition 不会有效果，此时调用smoothScrollBy来滑动到指定位置
+                mRecyclerView.smoothScrollBy(0, top);
+            }
+        } else {
+            // 第三种可能:跳转位置在最后可见项之后，则先调用smoothScrollToPosition将要跳转的位置滚动到可见位置
+            // 再通过onScrollStateChanged控制再次调用smoothMoveToPosition，执行上一个判断中的方法
+            mRecyclerView.smoothScrollToPosition(position);
+        }
     }
 }

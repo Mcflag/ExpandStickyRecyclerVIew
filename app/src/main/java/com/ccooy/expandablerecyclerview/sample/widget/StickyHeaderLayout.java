@@ -118,7 +118,7 @@ public class StickyHeaderLayout extends FrameLayout {
             public void run() {
                 updateStickyView(true);
             }
-        }, 100);
+        }, 200);
     }
 
     /**
