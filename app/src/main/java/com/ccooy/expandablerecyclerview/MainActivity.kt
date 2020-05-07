@@ -2,7 +2,7 @@ package com.ccooy.expandablerecyclerview
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.ccooy.expandablerecyclerview.sample.SampleActivity
+import com.ccooy.expandablerecyclerview.decoration.SampleActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
