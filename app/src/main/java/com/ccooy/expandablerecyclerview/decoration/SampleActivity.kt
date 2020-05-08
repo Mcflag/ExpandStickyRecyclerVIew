@@ -11,11 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.ccooy.expandablerecyclerview.R
-import com.ccooy.expandablerecyclerview.decoration.widget.AnimEndListener
-import com.ccooy.expandablerecyclerview.decoration.widget.BaseViewHolder
-import com.ccooy.expandablerecyclerview.decoration.widget.DefaultItemAnimator
-import com.ccooy.expandablerecyclerview.decoration.widget.GroupedRecyclerViewAdapter
-import com.ccooy.expandablerecyclerview.decoration.widget.StickyHeaderLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.api.RefreshLayout
@@ -27,6 +22,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import java.util.ArrayList
 
 import com.ccooy.expandablerecyclerview.decoration.GroupModel.getHeader
+import com.ccooy.expandablerecyclerview.decoration.widget.*
 
 /**
  * 可展开、收起的列表。
@@ -35,7 +31,7 @@ class SampleActivity : AppCompatActivity() {
 
     private var rvList: RecyclerView? = null
     private var refreshLayout: SmartRefreshLayout? = null
-//    private var stickyHeaderLayout: StickyHeaderLayout? = null
+    private var stickyHeaderLayout: StickyHeaderLayout? = null
     private var floatingActionButton: FloatingActionButton? = null
     private var groupList: ArrayList<ExpandableGroupEntity>? = null
     private var displayList: ArrayList<ExpandableGroupEntity>? = null
@@ -47,7 +43,7 @@ class SampleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_decoration_sample)
         rvList = findViewById(R.id.rv_list)
-//        stickyHeaderLayout = findViewById(R.id.sticky_layout)
+        stickyHeaderLayout = findViewById(R.id.sticky_layout)
         floatingActionButton = findViewById(R.id.fab)
         refreshLayout = findViewById(R.id.refreshLayout)
         linearLayoutManager = LinearLayoutManager(this)
@@ -58,10 +54,26 @@ class SampleActivity : AppCompatActivity() {
         animator.addDuration = 70
         animator.removeDuration = 70
         animator.setAnimEndListener {
-//            stickyHeaderLayout!!.updateStickyDelayed()
+            stickyHeaderLayout!!.updateStickyDelayed()
         }
         rvList!!.itemAnimator = animator
-
+//        rvList!!.addItemDecoration(SectionDecoration(
+//            displayList,
+//            this,
+//            object : SectionDecoration.DecorationCallback() {
+//                fun getGroupId(position: Int): String {
+//                    return if (groupList[position] != null) {
+//                        groupList[position]
+//                    } else "-1"
+//                }
+//
+//                fun getGroupFirstLine(position: Int): String {
+//                    return if (NameBean[position] != null) {
+//                        NameBean[position]
+//                    } else ""
+//                }
+//            })
+//        )
         rvList!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
@@ -123,12 +135,14 @@ class SampleActivity : AppCompatActivity() {
                 groupList!![groupPosition].isNeedToLoad = false
                 groupList!![groupPosition].isExpand = false
                 deleteGroupChild(groupPosition)
+                stickyHeaderLayout?.setHeightChange(true)
                 expandableAdapter.collapseGroup(groupPosition, true)
             } else {
                 groupList!![groupPosition].isExpand = true
                 groupList!![groupPosition].isNeedToLoad = true
                 val count = adapter.getGroupCount() - groupPosition
                 loadMoreData(groupPosition)
+                stickyHeaderLayout?.setHeightChange(true)
                 adapter.notifyGroupRangeRemoved(groupPosition, count)
                 expandableAdapter.expandGroup(groupPosition, true)
                 smoothMoveToPosition(rvList!!, tempPosition)

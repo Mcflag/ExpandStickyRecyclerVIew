@@ -52,6 +52,8 @@ public class StickyHeaderLayout extends FrameLayout {
     //是否已经注册了adapter刷新监听
     private boolean isRegisterDataObserver = false;
 
+    private boolean isHeightChange = false;
+
     public StickyHeaderLayout(@NonNull Context context) {
         super(context);
         mContext = context;
@@ -118,7 +120,11 @@ public class StickyHeaderLayout extends FrameLayout {
             public void run() {
                 updateStickyView(true);
             }
-        }, 200);
+        }, 64);
+    }
+
+    public void setHeightChange(boolean heightChange){
+        isHeightChange = heightChange;
     }
 
     /**
@@ -139,6 +145,7 @@ public class StickyHeaderLayout extends FrameLayout {
             tempCurrentPosition = mCurrentStickyGroup;
             tempGroupPosition = groupPosition;
 
+            Log.d("cccccc", "imperative: " + imperative + "isPositionEqual: " + (mCurrentStickyGroup != groupPosition));
             //如果当前吸顶的组头不是我们要吸顶的组头，就更新吸顶布局。这样做可以避免频繁的更新吸顶布局。
             if (imperative || mCurrentStickyGroup != groupPosition) {
                 mCurrentStickyGroup = groupPosition;
@@ -186,6 +193,8 @@ public class StickyHeaderLayout extends FrameLayout {
                 mStickyLayout.requestLayout();
             }
 
+            Log.d("cccccc", "Height: " + mStickyLayout.getHeight());
+            Log.d("cccccc", "calculateOffset: " + calculateOffset(gAdapter, firstVisibleItem, groupPosition + 1));
             //设置mStickyLayout的Y偏移量。
             if(tempCurrentPosition == tempGroupPosition) {
                 mStickyLayout.setTranslationY(calculateOffset(gAdapter, firstVisibleItem, groupPosition + 1));

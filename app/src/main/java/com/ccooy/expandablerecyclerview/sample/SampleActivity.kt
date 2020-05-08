@@ -110,6 +110,22 @@ class SampleActivity : AppCompatActivity() {
             refresh()
             refreshLayout.finishRefresh(true)
         }
+//        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+//            @Override
+//            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+//                if(isLoadGroup) {
+//                    loadMoreTime();
+//                    adapter.notifyDataSetChanged();
+//                    refreshLayout.finishLoadMore(true);
+//                }else{
+//                    int last = linearLayoutManager.findLastVisibleItemPosition();
+//                    int lastGroup = adapter.getGroupPositionForPosition(last);
+//                    loadMoreData(lastGroup);
+//                    adapter.notifyDataSetChanged();
+//                    refreshLayout.finishLoadMore(true);
+//                }
+//            }
+//        });
 
         groupList = ArrayList()
         displayList = ArrayList()

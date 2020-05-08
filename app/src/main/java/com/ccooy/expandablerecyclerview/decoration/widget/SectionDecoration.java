@@ -1,4 +1,4 @@
-//package com.ccooy.expandablerecyclerview.decoration.recyclerviewsuspend.ItemDecoration;
+//package com.ccooy.expandablerecyclerview.decoration.widget;
 //
 //import android.content.Context;
 //import android.content.res.Resources;
@@ -6,25 +6,22 @@
 //import android.graphics.Color;
 //import android.graphics.Paint;
 //import android.graphics.Rect;
-//import android.support.v7.widget.RecyclerView;
 //import android.text.TextPaint;
 //import android.text.TextUtils;
 //import android.view.View;
 //
-//import com.rmyh.recyclerviewsuspend.utils.DensityUtil;
-//import com.rmyh.recyclerviewsuspend.R;
+//import androidx.recyclerview.widget.RecyclerView;
 //
-//import java.util.List;
+//import com.ccooy.expandablerecyclerview.R;
+//import com.ccooy.expandablerecyclerview.decoration.ExpandableGroupEntity;
 //
-///**
-// * Created by wen on 2017/8/7.
-// */
+//import java.util.ArrayList;
 //
 //public class SectionDecoration extends RecyclerView.ItemDecoration {
 //
 //    private static final String TAG = "SectionDecoration";
 //
-//    private List<String> dataList;
+//    private ArrayList<ExpandableGroupEntity> dataList;
 //
 //    private DecorationCallback callback;
 //    private TextPaint textPaint;
@@ -34,13 +31,13 @@
 //    private Paint.FontMetrics fontMetrics;
 //
 //
-//    public SectionDecoration(List<String> dataList, Context context, DecorationCallback decorationCallback) {
+//    public SectionDecoration(ArrayList<ExpandableGroupEntity> dataList, Context context, DecorationCallback decorationCallback) {
 //        Resources res = context.getResources();
 //        this.dataList = dataList;
 //        this.callback = decorationCallback;
 //        //设置悬浮栏的画笔---paint
 //        paint = new Paint();
-//        paint.setColor(res.getColor(R.color.colorGray));
+//        paint.setColor(res.getColor(R.color.colorPrimaryDark));
 //
 //        //设置悬浮栏中文本的画笔
 //        textPaint = new TextPaint();
@@ -175,8 +172,8 @@
 //
 //    //定义一个借口方便外界的调用
 //    public interface DecorationCallback {
-//        String getGroupId(int position);
+//        ExpandableGroupEntity getGroupId(int position);
 //
-//        String getGroupFirstLine(int position);
+//        ExpandableGroupEntity getGroupFirstLine(int position);
 //    }
 //}

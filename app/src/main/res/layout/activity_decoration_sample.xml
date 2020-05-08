@@ -9,16 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-<!--        <com.ccooy.expandablerecyclerview.decoration.widget.StickyHeaderLayout-->
-<!--            android:id="@+id/sticky_layout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
+        <com.ccooy.expandablerecyclerview.decoration.widget.StickyHeaderLayout
+            android:id="@+id/sticky_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-<!--        </com.ccooy.expandablerecyclerview.decoration.widget.StickyHeaderLayout>-->
+        </com.ccooy.expandablerecyclerview.decoration.widget.StickyHeaderLayout>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
