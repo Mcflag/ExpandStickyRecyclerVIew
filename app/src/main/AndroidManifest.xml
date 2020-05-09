@@ -35,6 +35,14 @@
             android:name=".decoration.SampleActivity"
             android:label="示例"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".stockdemo.StockActivity"
+            android:label="示例"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".stockdemo.StockSecondActivity"
+            android:label="示例"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

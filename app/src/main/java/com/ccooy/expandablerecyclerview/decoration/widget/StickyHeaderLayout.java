@@ -69,16 +69,22 @@ public class StickyHeaderLayout extends FrameLayout {
         mContext = context;
     }
 
-    @Override
-    public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        if (getChildCount() > 0 || !(child instanceof RecyclerView)) {
-            //外界只能向StickyHeaderLayout添加一个RecyclerView,而且只能添加RecyclerView。
-            throw new IllegalArgumentException("StickyHeaderLayout can host only one direct child --> RecyclerView");
-        }
-        super.addView(child, index, params);
-        mRecyclerView = (RecyclerView) child;
+    public void setRecyclerView(RecyclerView recyclerView){
+        mRecyclerView = recyclerView;
         addOnScrollListener();
         addStickyLayout();
+    }
+
+    @Override
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+//        if (getChildCount() > 0 || !(child instanceof RecyclerView)) {
+//            //外界只能向StickyHeaderLayout添加一个RecyclerView,而且只能添加RecyclerView。
+//            throw new IllegalArgumentException("StickyHeaderLayout can host only one direct child --> RecyclerView");
+//        }
+//        super.addView(child, index, params);
+//        mRecyclerView = (RecyclerView) child;
+//        addOnScrollListener();
+//        addStickyLayout();
     }
 
     /**
@@ -104,7 +110,7 @@ public class StickyHeaderLayout extends FrameLayout {
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT,
                 LayoutParams.WRAP_CONTENT);
         mStickyLayout.setLayoutParams(lp);
-        super.addView(mStickyLayout, 1, lp);
+        super.addView(mStickyLayout, 0, lp);
     }
 
     /**

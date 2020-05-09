@@ -4,23 +4,33 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+    <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+<!--    <com.ajguan.library.EasyRefreshLayout-->
+<!--        android:id="@+id/refreshLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+<!--    <com.scwang.smartrefresh.layout.SmartRefreshLayout-->
+<!--        android:id="@+id/refreshLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
 
-        <com.ccooy.expandablerecyclerview.decoration.widget.StickyHeaderLayout
-            android:id="@+id/sticky_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </com.ccooy.expandablerecyclerview.decoration.widget.StickyHeaderLayout>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+<!--    </com.scwang.smartrefresh.layout.SmartRefreshLayout>-->
+<!--    </com.ajguan.library.EasyRefreshLayout>-->
+    </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 
+<com.ccooy.expandablerecyclerview.decoration.widget.StickyHeaderLayout
+    android:id="@+id/sticky_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+</com.ccooy.expandablerecyclerview.decoration.widget.StickyHeaderLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="58dp"
