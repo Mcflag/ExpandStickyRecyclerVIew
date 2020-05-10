@@ -48,11 +48,13 @@ public class StickyHeaderLayout extends FrameLayout {
 
     //是否吸顶。
     private boolean isSticky = true;
+    private boolean isVisible = true;
 
     //是否已经注册了adapter刷新监听
     private boolean isRegisterDataObserver = false;
 
     private boolean isHeightChange = false;
+    private HeightChangeListener heightChangeListener;
 
     public StickyHeaderLayout(@NonNull Context context) {
         super(context);
@@ -120,17 +122,25 @@ public class StickyHeaderLayout extends FrameLayout {
         updateStickyView(true);
     }
 
-    public void updateStickyDelayed() {
+    public void updateStickyLongDelayed() {
+        updateStickyView(true);
         postDelayed(new Runnable() {
             @Override
             public void run() {
                 updateStickyView(true);
+                if(heightChangeListener!=null) {
+                    heightChangeListener.onHeightChange();
+                }
             }
-        }, 64);
+        }, 300);
     }
 
     public void setHeightChange(boolean heightChange){
         isHeightChange = heightChange;
+    }
+
+    public void setHeightChangeListener(HeightChangeListener heightChangeListener){
+        this.heightChangeListener = heightChangeListener;
     }
 
     /**
@@ -151,7 +161,6 @@ public class StickyHeaderLayout extends FrameLayout {
             tempCurrentPosition = mCurrentStickyGroup;
             tempGroupPosition = groupPosition;
 
-            Log.d("cccccc", "imperative: " + imperative + "isPositionEqual: " + (mCurrentStickyGroup != groupPosition));
             //如果当前吸顶的组头不是我们要吸顶的组头，就更新吸顶布局。这样做可以避免频繁的更新吸顶布局。
             if (imperative || mCurrentStickyGroup != groupPosition) {
                 mCurrentStickyGroup = groupPosition;
@@ -199,8 +208,6 @@ public class StickyHeaderLayout extends FrameLayout {
                 mStickyLayout.requestLayout();
             }
 
-            Log.d("cccccc", "Height: " + mStickyLayout.getHeight());
-            Log.d("cccccc", "calculateOffset: " + calculateOffset(gAdapter, firstVisibleItem, groupPosition + 1));
             //设置mStickyLayout的Y偏移量。
             if(tempCurrentPosition == tempGroupPosition) {
                 mStickyLayout.setTranslationY(calculateOffset(gAdapter, firstVisibleItem, groupPosition + 1));
@@ -388,6 +395,19 @@ public class StickyHeaderLayout extends FrameLayout {
         }
     }
 
+    public void setVisible(boolean visible) {
+        if (isVisible != visible) {
+            isVisible = visible;
+            if (mStickyLayout != null) {
+                if (isVisible) {
+                    mStickyLayout.setVisibility(VISIBLE);
+                } else {
+                    mStickyLayout.setVisibility(GONE);
+                }
+            }
+        }
+    }
+
     @Override
     protected int computeVerticalScrollOffset() {
         if (mRecyclerView != null) {
@@ -447,5 +467,9 @@ public class StickyHeaderLayout extends FrameLayout {
         } else {
             super.scrollTo(x, y);
         }
+    }
+
+    public interface HeightChangeListener {
+        void onHeightChange();
     }
 }

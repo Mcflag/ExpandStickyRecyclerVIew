@@ -28,7 +28,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ajguan.library.EasyRefreshLayout;
 import com.ccooy.expandablerecyclerview.MainActivity;
 import com.ccooy.expandablerecyclerview.stockdemo.stickyheader.DividerHelper;
 import com.ccooy.expandablerecyclerview.stockdemo.stickyheader.OnStickyChangeListener;

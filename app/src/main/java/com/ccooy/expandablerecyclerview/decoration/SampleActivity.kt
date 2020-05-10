@@ -3,31 +3,23 @@ package com.ccooy.expandablerecyclerview.decoration
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ajguan.library.EasyRefreshLayout
-import com.ajguan.library.LoadModel
-
 import com.ccooy.expandablerecyclerview.R
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.scwang.smartrefresh.layout.SmartRefreshLayout
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.footer.ClassicsFooter
-import com.scwang.smartrefresh.layout.header.ClassicsHeader
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener
-
-import java.util.ArrayList
-
 import com.ccooy.expandablerecyclerview.decoration.GroupModel.getHeader
-import com.ccooy.expandablerecyclerview.decoration.widget.*
-import com.google.gson.Gson
-import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter
-import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+import com.ccooy.expandablerecyclerview.decoration.library.EasyRefreshLayout
+import com.ccooy.expandablerecyclerview.decoration.library.LoadModel
+import com.ccooy.expandablerecyclerview.decoration.library.view.CommonRefreshHeaderView
+import com.ccooy.expandablerecyclerview.decoration.library.view.PullListener
+import com.ccooy.expandablerecyclerview.decoration.widget.DefaultItemAnimator
+import com.ccooy.expandablerecyclerview.decoration.widget.SectionDecoration
+import com.ccooy.expandablerecyclerview.decoration.widget.StickyHeaderLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.util.*
 
 /**
  * 可展开、收起的列表。
@@ -36,8 +28,8 @@ class SampleActivity : AppCompatActivity() {
 
     private var rvList: RecyclerView? = null
 //    private var refreshLayout: SmartRefreshLayout? = null
-//    private var easyRefreshLayout: EasyRefreshLayout? = null
-    private var twinklingRefreshLayout: TwinklingRefreshLayout? = null
+    private var easyRefreshLayout: EasyRefreshLayout? = null
+//    private var twinklingRefreshLayout: TwinklingRefreshLayout? = null
     private var stickyHeaderLayout: StickyHeaderLayout? = null
     private var floatingActionButton: FloatingActionButton? = null
     private var groupList: ArrayList<ExpandableGroupEntity>? = null
@@ -47,6 +39,14 @@ class SampleActivity : AppCompatActivity() {
     private var linearLayoutManager: LinearLayoutManager? = null
     private var isLoadGroup = false
     private lateinit var mDecoration:SectionDecoration
+    private var mHandler: Handler = Handler()
+    private val mRunnable: Runnable = Runnable {
+        if(stickyHeaderLayout!=null){
+            stickyHeaderLayout!!.setVisible(false)
+            stickyHeaderLayout!!.setHeightChange(false)
+            stickyHeaderLayout!!.setVisible(true)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +54,7 @@ class SampleActivity : AppCompatActivity() {
         rvList = findViewById(R.id.rv_list)
         stickyHeaderLayout = findViewById(R.id.sticky_layout)
         floatingActionButton = findViewById(R.id.fab)
-        twinklingRefreshLayout = findViewById(R.id.refreshLayout)
+        easyRefreshLayout = findViewById(R.id.refreshLayout)
         linearLayoutManager = LinearLayoutManager(this)
         rvList!!.layoutManager = linearLayoutManager
         val animator = DefaultItemAnimator()
@@ -138,104 +138,40 @@ class SampleActivity : AppCompatActivity() {
 //            }
 //        }
 
-//        easyRefreshLayout!!.addEasyEvent(object: EasyRefreshLayout.EasyEvent{
-//            override fun onLoadMore() {
-//                if (null != linearLayoutManager) {
-//                    if (isLoadGroup) {
-//                        loadMoreTime()
-//                        adapter!!.notifyDataSetChanged()
-//                        easyRefreshLayout!!.loadMoreComplete()
-//                    } else {
-//                        val last = linearLayoutManager!!.findLastVisibleItemPosition()
-//                        val lastGroup = adapter!!.getGroupPositionForPosition(last)
-//                        loadMoreData(lastGroup)
-//                        adapter!!.notifyDataSetChanged()
-//                        easyRefreshLayout!!.loadMoreComplete()
-//                    }
-//                }
-//            }
-//
-//            override fun onRefreshing() {
-//                refresh()
-//                easyRefreshLayout!!.refreshComplete()
-//            }
-//        })
-//        easyRefreshLayout!!.setLoadMoreModel(LoadModel.COMMON_MODEL)
-
-        twinklingRefreshLayout!!.setOnRefreshListener(object: RefreshListenerAdapter(){
-            override fun onLoadMore(refreshLayout: TwinklingRefreshLayout?) {
-                super.onLoadMore(refreshLayout)
+        easyRefreshLayout!!.addEasyEvent(object: EasyRefreshLayout.EasyEvent{
+            override fun onLoadMore() {
                 if (null != linearLayoutManager) {
                     if (isLoadGroup) {
                         loadMoreTime()
                         adapter!!.notifyDataSetChanged()
-                        twinklingRefreshLayout!!.finishLoadmore()
+                        easyRefreshLayout!!.loadMoreComplete()
                     } else {
                         val last = linearLayoutManager!!.findLastVisibleItemPosition()
                         val lastGroup = adapter!!.getGroupPositionForPosition(last)
                         loadMoreData(lastGroup)
                         adapter!!.notifyDataSetChanged()
-                        twinklingRefreshLayout!!.finishLoadmore()
+                        easyRefreshLayout!!.loadMoreComplete()
                     }
                 }
             }
 
-            override fun onRefresh(refreshLayout: TwinklingRefreshLayout?) {
-                super.onRefresh(refreshLayout)
+            override fun onRefreshing() {
                 refresh()
-                twinklingRefreshLayout!!.finishRefreshing()
+                easyRefreshLayout!!.refreshComplete()
             }
-
-            override fun onPullDownReleasing(
-                refreshLayout: TwinklingRefreshLayout?,
-                fraction: Float
-            ) {
-                super.onPullDownReleasing(refreshLayout, fraction)
-                stickyHeaderLayout!!.isSticky=false
-            }
-
-            override fun onPullingDown(refreshLayout: TwinklingRefreshLayout?, fraction: Float) {
-                super.onPullingDown(refreshLayout, fraction)
-                stickyHeaderLayout!!.isSticky=false
-            }
-
-//            override fun onPullingUp(refreshLayout: TwinklingRefreshLayout?, fraction: Float) {
-//                super.onPullingUp(refreshLayout, fraction)
-//                stickyHeaderLayout!!.updateStickyView()
-//            }
-//
-//            override fun onPullUpReleasing(
-//                refreshLayout: TwinklingRefreshLayout?,
-//                fraction: Float
-//            ) {
-//                super.onPullUpReleasing(refreshLayout, fraction)
-//                stickyHeaderLayout!!.updateStickyView()
-//            }
-
-            override fun onFinishRefresh() {
-                super.onFinishRefresh()
-                stickyHeaderLayout!!.isSticky=true
-                stickyHeaderLayout!!.updateStickyView()
-            }
-
-            override fun onRefreshCanceled() {
-                super.onRefreshCanceled()
-                stickyHeaderLayout!!.isSticky=true
-                stickyHeaderLayout!!.updateStickyView()
-            }
-
-//            override fun onLoadmoreCanceled() {
-//                super.onLoadmoreCanceled()
-//                stickyHeaderLayout!!.isSticky=true
-//                stickyHeaderLayout!!.updateStickyView()
-//            }
-//
-//            override fun onFinishLoadMore() {
-//                super.onFinishLoadMore()
-//                stickyHeaderLayout!!.isSticky=true
-//                stickyHeaderLayout!!.updateStickyView()
-//            }
         })
+        val refreshHeaderView = CommonRefreshHeaderView(this)
+        refreshHeaderView.setPullListener(object: PullListener{
+            override fun pull(){
+                stickyHeaderLayout?.setVisible(false)
+            }
+
+            override fun reset() {
+                stickyHeaderLayout?.setVisible(true)
+            }
+        })
+        easyRefreshLayout!!.setRefreshHeadView(refreshHeaderView)
+        easyRefreshLayout!!.setLoadMoreModel(LoadModel.COMMON_MODEL)
 
         groupList = ArrayList()
         displayList = ArrayList()
@@ -247,7 +183,11 @@ class SampleActivity : AppCompatActivity() {
                 groupList!![groupPosition].isNeedToLoad = false
                 groupList!![groupPosition].isExpand = false
                 deleteGroupChild(groupPosition)
+                stickyHeaderLayout!!.setHeightChange(true)
                 expandableAdapter.collapseGroup(groupPosition, false)
+                stickyHeaderLayout!!.updateStickyLongDelayed()
+                stickyHeaderLayout!!.setVisible(false)
+                mHandler.postDelayed(mRunnable, 50)
             } else {
                 groupList!![groupPosition].isExpand = true
                 groupList!![groupPosition].isNeedToLoad = true
@@ -261,6 +201,10 @@ class SampleActivity : AppCompatActivity() {
         adapter!!.setOnChildClickListener { adapter, holder, groupPosition, childPosition -> }
         rvList!!.adapter = adapter
         stickyHeaderLayout!!.setRecyclerView(rvList)
+        stickyHeaderLayout!!.setHeightChangeListener {
+            stickyHeaderLayout!!.setHeightChange(false)
+            stickyHeaderLayout!!.setVisible(true)
+        }
         refresh()
     }
 
