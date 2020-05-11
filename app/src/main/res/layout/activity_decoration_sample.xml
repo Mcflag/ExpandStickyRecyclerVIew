@@ -4,27 +4,17 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout-->
-<!--        android:id="@+id/refreshLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
     <com.ccooy.expandablerecyclerview.decoration.library.EasyRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-<!--    <com.scwang.smartrefresh.layout.SmartRefreshLayout-->
-<!--        android:id="@+id/refreshLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
 
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-<!--    </com.scwang.smartrefresh.layout.SmartRefreshLayout>-->
     </com.ccooy.expandablerecyclerview.decoration.library.EasyRefreshLayout>
-<!--    </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>-->
 
     <com.ccooy.expandablerecyclerview.decoration.widget.StickyHeaderLayout
         android:id="@+id/sticky_layout"

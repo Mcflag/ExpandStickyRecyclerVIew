@@ -53,8 +53,8 @@ public class StickyHeaderLayout extends FrameLayout {
     //是否已经注册了adapter刷新监听
     private boolean isRegisterDataObserver = false;
 
-    private boolean isHeightChange = false;
     private HeightChangeListener heightChangeListener;
+    private boolean isInvisible = false;
 
     public StickyHeaderLayout(@NonNull Context context) {
         super(context);
@@ -122,21 +122,11 @@ public class StickyHeaderLayout extends FrameLayout {
         updateStickyView(true);
     }
 
-    public void updateStickyLongDelayed() {
+    public void updateStickyWithListener() {
         updateStickyView(true);
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                updateStickyView(true);
-                if(heightChangeListener!=null) {
-                    heightChangeListener.onHeightChange();
-                }
-            }
-        }, 300);
-    }
-
-    public void setHeightChange(boolean heightChange){
-        isHeightChange = heightChange;
+        if(heightChangeListener!=null) {
+            heightChangeListener.onHeightChange();
+        }
     }
 
     public void setHeightChangeListener(HeightChangeListener heightChangeListener){
@@ -390,6 +380,21 @@ public class StickyHeaderLayout extends FrameLayout {
                 } else {
                     recycle();
                     mStickyLayout.setVisibility(GONE);
+                }
+            }
+        }
+    }
+
+    public void setInvisible(boolean invisible) {
+        if (isInvisible != invisible) {
+            isInvisible = invisible;
+            if (mStickyLayout != null) {
+                if (isInvisible) {
+                    mStickyLayout.setVisibility(INVISIBLE);
+                    mStickyLayout.setClickable(false);
+                } else {
+                    mStickyLayout.setVisibility(VISIBLE);
+                    mStickyLayout.setClickable(true);
                 }
             }
         }
